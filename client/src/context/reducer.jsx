@@ -10,7 +10,14 @@ import {    CLEAR_ALERT,
             LOGOUT_USER,
             UPDATE_USER_BEGIN,
             UPDATE_USER_ERROR,
-            UPDATE_USER_SUCCESS} from "./action"
+            UPDATE_USER_SUCCESS,
+            HANDLE_CHANGE,
+            CLEAR_VALUES,
+            CREATE_JOB_BEGIN,
+            CREATE_JOB_ERROR,
+            CREATE_JOB_SUCCESS,
+            GET_JOBS_BEGIN,
+            GET_JOBS_SUCCESS} from "./action"
 import { initialState } from "./appContext"
 
 
@@ -114,6 +121,65 @@ const reducer = (state,action) => {
             alertText : action.payload.message
         }
     }
+    
+    if(action.type === HANDLE_CHANGE) {
+        return {...state , [action.payload.name] : action.payload.value}
+    }
+
+    if(action.type === CLEAR_VALUES) {
+        const initialState = {
+            isEditing: false,
+            editJobId: false,
+            position: '',
+            company : '',
+            jobLocation: state.userLocation,
+            jobType : 'full-time',
+            status:'pending'
+        }
+
+        return {...state,...initialState}
+    }
+
+    if(action.type === CREATE_JOB_BEGIN) {
+        return {...state,isLoading : true}
+    }
+
+
+
+    if(action.type === CREATE_JOB_SUCCESS) {
+        return {
+            ...state,
+            isLoading : false,
+            showAlert: true,
+            alertType: 'success',
+            alertText : 'New Job created successfully'
+        }
+    }
+
+    if(action.type === CREATE_JOB_ERROR) {
+        return {
+            ...state,
+            isLoading : false,
+            showAlert: true,
+            alertType: 'danger',
+            alertText : action.payload.message
+        }
+    }
+
+    if(action.type === GET_JOBS_BEGIN) {
+        return {...state , isLoading: true, showAlert : false}
+    }
+
+    if(action.type === GET_JOBS_SUCCESS) {
+        return {
+            ...state,
+            isLoading : false ,
+            jobs : action.payload.jobs,
+            totalJobs : action.payload.totalJobs,
+            numOfPages : action.payload.numOfPages
+        }
+    }
+
 
     throw new Error (`no such action : ${action.type}`)
 }

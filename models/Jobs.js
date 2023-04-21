@@ -24,7 +24,7 @@ const jobSchema = new mongoose.Schema({
     },
     jobType : {
         type : String ,
-        enum : ['full-time' , 'part-time' , 'internship'],
+        enum : ['full-time' , 'part-time' , 'remote' , 'internship'],
         default : 'full-time'
     },
     jobLocation : {
@@ -40,4 +40,4 @@ const jobSchema = new mongoose.Schema({
 } , {timestamps : true})
 
 
-export const jobModel = new mongoose.models('job' , jobSchema)
+export const jobModel =  mongoose.model('job' , jobSchema)
