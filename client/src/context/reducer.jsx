@@ -7,7 +7,10 @@ import {    CLEAR_ALERT,
             LOGIN_USER_ERROR,
             LOGIN_USER_SUCCESS, 
             TOGGLE_SIDEBAR,
-            LOGOUT_USER} from "./action"
+            LOGOUT_USER,
+            UPDATE_USER_BEGIN,
+            UPDATE_USER_ERROR,
+            UPDATE_USER_SUCCESS} from "./action"
 import { initialState } from "./appContext"
 
 
@@ -83,6 +86,33 @@ const reducer = (state,action) => {
 
     if(action.type === LOGOUT_USER) {
         return {...initialState, user : null, token : null, jobLocation : '' , userLocation : ''}
+    }
+
+    if(action.type === UPDATE_USER_BEGIN) {
+        return {...state , isLoading : true}
+    }
+    if(action.type === UPDATE_USER_SUCCESS) {
+        return {
+            ...state,
+            isLoading : false,
+            token : action.payload.token,
+            user : action.payload.user,
+            userLocation : action.payload.location,
+            jobLocation : action.payload.location,
+            showAlert: true,
+            alertType: 'success',
+            alertText : 'User profile updated successfully'
+        }
+    }
+
+    if(action.type === UPDATE_USER_ERROR) {
+        return {
+            ...state,
+            isLoading : false,
+            showAlert: true,
+            alertType: 'danger',
+            alertText : action.payload.message
+        }
     }
 
     throw new Error (`no such action : ${action.type}`)
