@@ -11,7 +11,10 @@ import { CLEAR_ALERT,
             LOGIN_USER_SUCCESS,
             LOGIN_USER_ERROR,
             TOGGLE_SIDEBAR,
-            LOGOUT_USER} from './action'
+            LOGOUT_USER,
+            UPDATE_USER_BEGIN,
+            UPDATE_USER_ERROR,
+            UPDATE_USER_SUCCESS} from './action'
 import axios from 'axios'
 
 
@@ -39,6 +42,34 @@ const AppContext = React.createContext()
 
 const AppProvider = ({children}) => {
     const [state,dispatch] = useReducer(reducer,initialState)
+
+
+    const authFetch = axios.create({
+        baseURL: '/api/v1',
+      });
+
+    authFetch.interceptors.request.use(
+        (config) => {
+            // config.headers['Authorization'] = `Bearer ${state.token}`
+            return config
+        },
+        (error) => {
+            return Promise.reject(error)
+        }
+    )
+
+    authFetch.interceptors.response.use(
+        (response) => {
+            return response
+        },
+        (error) => {
+            console.log(error.response)
+            if(error.response.status === 401) {
+                logOutUser()
+            }
+            return Promise.reject(error)
+        }
+    )
 
 
     const displayAlert = () => {
@@ -114,6 +145,27 @@ const AppProvider = ({children}) => {
         removeUserFromLocalStorage()
     }
 
+    const updateUser = async (currentUser) => {
+        dispatch({type : UPDATE_USER_BEGIN})
+        try {
+            const {data} = await authFetch.patch('/auth/updateUser' , currentUser)
+            const {user , location , token} = data
+            dispatch({
+                type : UPDATE_USER_SUCCESS,
+                payload : {user,location,token}
+            })
+
+            addToLocalStorage({user,location,token})
+
+        } catch (error) {
+            if(error.response.status !== 401) {
+                dispatch({type : UPDATE_USER_ERROR , payload : {message : error.response.data.message}})
+
+            }
+        }
+        clearAlert()
+    }
+
 
     return (
         <AppContext.Provider value={{
@@ -122,7 +174,8 @@ const AppProvider = ({children}) => {
             registerUser,
             loginUser,
             toggleSidebar,
-            logOutUser
+            logOutUser,
+            updateUser
         }}>
             {children}
         </AppContext.Provider>
