@@ -4,7 +4,7 @@ import Wrapper from "../assets/wrappers/JobInfo"
 
 
 
-const JobInfo = ({icon,text,gamed}) => {
+const JobInfo = ({icon,text}) => {
     return (
         <Wrapper>
             <span className="icon">{icon}</span>
