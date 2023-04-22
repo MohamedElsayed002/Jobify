@@ -10,7 +10,7 @@ const jobSchema = new mongoose.Schema({
         type : String ,
         required : [true , 'please provide company'],
         trim : true,
-        maxLength : 30
+        maxLength : 50
     },
     position : {
         type : String,
@@ -40,4 +40,4 @@ const jobSchema = new mongoose.Schema({
 } , {timestamps : true})
 
 
-export const jobModel =  mongoose.model('job' , jobSchema)
+export const jobModel = new  mongoose.model('job' , jobSchema)

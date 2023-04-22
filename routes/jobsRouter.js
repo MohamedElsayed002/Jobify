@@ -1,5 +1,5 @@
 
-import  {createJob , deleteJob , getAllJobs , updateJob , showStats} from '../controllers/jobsController.js'
+import  {createJob , deleteJob , getAllJobs , updateJob , showStats } from '../controllers/jobsController.js'
 import express from 'express'
 
 

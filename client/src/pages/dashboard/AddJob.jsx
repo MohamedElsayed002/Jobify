@@ -20,7 +20,8 @@ const AddJob = () => {
             jobType,
             jobTypeOptions,
             status,
-            statusOptions} = useAppContext()
+            statusOptions,
+            editJob} = useAppContext()
 
 
             const handleJobInput = (e) => {
